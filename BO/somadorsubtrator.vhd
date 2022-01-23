@@ -1,17 +1,34 @@
-LIBRARY ieee;
-USE ieee.std_logic_1164.all;
-USE ieee.std_logic_unsigned.all;
+-- nao sei se vai ser um somadorsubtrator ou blocos diferentes, de qualquer forma esse n ta pronto
 
-ENTITY somadorsubtrator IS
-generic (N : integer);
-PORT (a, b : IN STD_LOGIC_VECTOR(N-1 DOWNTO 0);
-      op: IN STD_LOGIC;
-      s : OUT STD_LOGIC_VECTOR(N-1 DOWNTO 0));
-END somadorsubtrator;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
 
-ARCHITECTURE estrutura OF somadorsubtrator IS
-BEGIN
-	WITH op SELECT
-         s <= a + b WHEN '0',
-              a - b WHEN OTHERS;
-END estrutura;
+entity somadorsubtrator is
+      generic (N: integer);
+      port (A, B: in std_logic_vector(N-1 downto 0);
+            op: in std_logic;
+            S: out std_logic_vector(N-1 downto 0);
+            o: out std_logic);      -- status do overflow
+end somadorsubtrator;
+
+architecture arch of somadorsubtrator is
+      signal SS: std_logic_vector(N-1 downto 0);
+
+      component somador is
+            generic(N: integer);
+            port(A, B: in std_logic_vector(N-1 downto 0);
+                  cin: in std_logic;
+                  S: out std_logic_vector(N-1 downto 0);
+                  cout: out std_logic);
+      end component;
+
+begin
+      -- seletor
+	with op select
+         S <= SS when '0',
+            A - B when others;
+      
+      -- (nao sei quanto ao carry-in, se gente vai aproveitar ele pra algo)
+      SUM: somador generic map (N); port map (A, B, '0', SS, o);
+end arch;
