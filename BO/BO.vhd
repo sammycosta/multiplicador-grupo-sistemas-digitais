@@ -4,12 +4,11 @@ use ieee.std_logic_unsigned.all;
 
 entity bo is
       generic (N : integer);
-
       port (
             clk : in std_logic;
             cEnt, mB, op, cmult, mmult : in std_logic;
             entA, entB : in std_logic_vector(N - 1 downto 0);
-            Az, Bz : out std_logic;
+            Az, Bz, ovf: out std_logic;
             mult : out std_logic_vector(N - 1 downto 0));
 end bo;
 architecture estrutura of bo is
@@ -54,10 +53,15 @@ architecture estrutura of bo is
       end component;
 
       signal ZERO : std_logic_vector(N - 1 downto 0) := (others => '0');
-      signal saimuxB, sairegA, sairegB, saisomasub : std_logic_vector (N - 1 downto 0);
+      signal saimuxB, sairegA, sairegB, saisomasub, saimuxMult: std_logic_vector (N - 1 downto 0);
       signal quant_zero : integer range 0 to N - 1;
+      signal zeros: std_logic_vector(quant_zero-1 downto0) := (others => '0');
+
 begin
       -- componentes e conexões entre eles (port map) usar generic
+      -- problemas/ duvidas atuais pra resolver: NUMERO DE BITS NÃO SÃO COMPATIVEIS
+      -- resolver esse problema, testar, depois resolver o caso em que não tem zeros pra adicionar.
+
       regA : registrador generic map(N => N)
       port map
       (
@@ -92,7 +96,53 @@ begin
             zeros <= quant_zero; 
       );
 
-      -- falta: dois muxes da soma, somasub, mux de cmult e zeros/etc
+
+      muxMult: mux2para1 generic map (N => N)
+      port map
+      (
+            a <= saisomasub;
+            b <= ZERO;
+            sel <= cmult;
+            y <= saimuxMult
+      );
+
+      regMult : registrador generic map(N => N)
+      port map
+      (
+            clk => clk;
+            carga => saimuxMult;
+            d => entA;
+            q => mult
+      );
+
+      muxsoma1: mux2para1 generic map (N => N)
+      port map
+      (
+            a <= mult;
+            b <= sairegB;
+            sel <= op;
+            y <= saimuxsoma1
+      );
+
+      muxsoma2: mux2para1 generic map (N => N)
+      port map
+      (
+            a <= sairegA&zeros;
+            b <= 1&zeros;
+            sel <= op;
+            y <= saimuxsoma2
+      );
+
+      somasub: somadorsubtrator generic map (N => N)
+      port map
+      (
+            A <= saimuxsoma1;
+            B <= saimuxsoma2;
+            op <= op;
+            S <= saisomasub;
+            o <= ovf
+      );
+
 	geraAz: igualazero generic map(N  => N) 
       port map 
       (
