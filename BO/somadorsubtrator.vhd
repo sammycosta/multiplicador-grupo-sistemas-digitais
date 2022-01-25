@@ -1,5 +1,3 @@
--- nao sei se vai ser um somadorsubtrator ou blocos diferentes, de qualquer forma esse n ta pronto
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
@@ -24,11 +22,11 @@ architecture arch of somadorsubtrator is
       end component;
 
 begin
-      -- seletor
+      -- seletor de operacao
 	with op select
          S <= SS when '0',
             A - B when others;
-      
-      -- (nao sei quanto ao carry-in, se gente vai aproveitar ele pra algo)
-      SUM: somador generic map (N); port map (A, B, '0', SS, o);
+
+      -- somador de fulladders
+      SUM: somador generic map (N) port map (A, B, '0', SS, o);
 end arch;
