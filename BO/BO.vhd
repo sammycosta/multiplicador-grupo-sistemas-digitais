@@ -1,11 +1,11 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
-use ieee.std_logic_arith.all; 
+--use ieee.std_logic_arith.all; 
 use ieee.numeric_std.all;  
 
 entity bo is
-      generic (N : integer);
+      generic (N : integer := 4);
       port (
             clk : in std_logic;
             cEnt, mB, op, cmult, mmult : in std_logic;
@@ -56,8 +56,7 @@ architecture estrutura of bo is
 
       signal ZERO : std_logic_vector(N - 1 downto 0) := (others => '0');
       signal sairegMult, saimuxB, sairegA, sairegB, saisomasub, saimuxMult, saimuxsoma1, saimuxsoma2: std_logic_vector (2*N - 1 downto 0);
-      signal quant_zero : integer range 0 to N - 1;
-      signal zeros: std_logic_vector(quant_zero-1 downto 0) := (others => '0');
+      signal quant_zero : integer range 0 to 2*N - 1;
       signal zero_um: std_logic_vector(2*N - 2 downto 0):= (others => '0');
 begin
       -- componentes e conexÃµes entre eles (port map) usar generic
@@ -133,7 +132,7 @@ begin
       port map
       (
             a => std_logic_vector(shift_left(unsigned(sairegA), quant_zero)) ,    -- shift de n vezes, sendo n = quant_zero
-            b => std_logic_vector(shift_left(unsigned(zero_um&1), quant_zero)),   -- potÃŠncia a ser retirada de b
+            b => std_logic_vector(shift_left(unsigned(zero_um &'1'), quant_zero)),   -- potÃŠncia a ser retirada de b
             sel => op,
             y => saimuxsoma2
       );
@@ -148,17 +147,17 @@ begin
             o => ovf
       );
 
-	geraAz: igualazero generic map(N  => N) 
+	geraAz: igualazero generic map(N  => 2*N) 
       port map 
       (
             a => sairegA,
             igual => Az
       ); 
 
-      geraBz: igualazero generic map(N  => N) 
+      geraBz: igualazero generic map(N  => 2*N) 
       port map 
       (
-            a => sairegAB,
+            a => sairegB,
             igual => Bz
       ); 
 		
