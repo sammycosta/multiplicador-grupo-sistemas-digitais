@@ -1,0 +1,511 @@
+|bo
+clk => registrador:regA.clk
+clk => registrador:regB.clk
+clk => registrador:regMult.clk
+cEnt => registrador:regA.carga
+cEnt => registrador:regB.carga
+mB => mux2para1:muxB.sel
+op => mux2para1:muxsoma1.sel
+op => mux2para1:muxsoma2.sel
+op => somadorsubtrator:somasub.op
+cmult => mux2para1:muxMult.sel
+cmult => registrador:regMult.carga
+mmult => ~NO_FANOUT~
+entA[0] => registrador:regA.d[0]
+entA[1] => registrador:regA.d[1]
+entA[2] => registrador:regA.d[2]
+entA[3] => registrador:regA.d[3]
+entB[0] => mux2para1:muxB.b[0]
+entB[1] => mux2para1:muxB.b[1]
+entB[2] => mux2para1:muxB.b[2]
+entB[3] => mux2para1:muxB.b[3]
+Az <= igualazero:geraAz.igual
+Bz <= igualazero:geraBz.igual
+ovf <= somadorsubtrator:somasub.o
+mult[0] <= registrador:regMult.q[0]
+mult[1] <= registrador:regMult.q[1]
+mult[2] <= registrador:regMult.q[2]
+mult[3] <= registrador:regMult.q[3]
+mult[4] <= registrador:regMult.q[4]
+mult[5] <= registrador:regMult.q[5]
+mult[6] <= registrador:regMult.q[6]
+mult[7] <= registrador:regMult.q[7]
+
+
+|bo|registrador:regA
+clk => q[0]~reg0.CLK
+clk => q[1]~reg0.CLK
+clk => q[2]~reg0.CLK
+clk => q[3]~reg0.CLK
+clk => q[4]~reg0.CLK
+clk => q[5]~reg0.CLK
+clk => q[6]~reg0.CLK
+clk => q[7]~reg0.CLK
+carga => q[0]~reg0.ENA
+carga => q[1]~reg0.ENA
+carga => q[2]~reg0.ENA
+carga => q[3]~reg0.ENA
+carga => q[4]~reg0.ENA
+carga => q[5]~reg0.ENA
+carga => q[6]~reg0.ENA
+carga => q[7]~reg0.ENA
+d[0] => q[0]~reg0.DATAIN
+d[1] => q[1]~reg0.DATAIN
+d[2] => q[2]~reg0.DATAIN
+d[3] => q[3]~reg0.DATAIN
+d[4] => q[4]~reg0.DATAIN
+d[5] => q[5]~reg0.DATAIN
+d[6] => q[6]~reg0.DATAIN
+d[7] => q[7]~reg0.DATAIN
+q[0] <= q[0]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[1] <= q[1]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[2] <= q[2]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[3] <= q[3]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[4] <= q[4]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[5] <= q[5]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[6] <= q[6]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[7] <= q[7]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|mux2para1:muxB
+a[0] => y.DATAB
+a[1] => y.DATAB
+a[2] => y.DATAB
+a[3] => y.DATAB
+a[4] => y.DATAB
+a[5] => y.DATAB
+a[6] => y.DATAB
+a[7] => y.DATAB
+b[0] => y.DATAA
+b[1] => y.DATAA
+b[2] => y.DATAA
+b[3] => y.DATAA
+b[4] => y.DATAA
+b[5] => y.DATAA
+b[6] => y.DATAA
+b[7] => y.DATAA
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+y[0] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[1] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[2] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[3] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[4] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[5] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[6] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[7] <= y.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|registrador:regB
+clk => q[0]~reg0.CLK
+clk => q[1]~reg0.CLK
+clk => q[2]~reg0.CLK
+clk => q[3]~reg0.CLK
+clk => q[4]~reg0.CLK
+clk => q[5]~reg0.CLK
+clk => q[6]~reg0.CLK
+clk => q[7]~reg0.CLK
+carga => q[0]~reg0.ENA
+carga => q[1]~reg0.ENA
+carga => q[2]~reg0.ENA
+carga => q[3]~reg0.ENA
+carga => q[4]~reg0.ENA
+carga => q[5]~reg0.ENA
+carga => q[6]~reg0.ENA
+carga => q[7]~reg0.ENA
+d[0] => q[0]~reg0.DATAIN
+d[1] => q[1]~reg0.DATAIN
+d[2] => q[2]~reg0.DATAIN
+d[3] => q[3]~reg0.DATAIN
+d[4] => q[4]~reg0.DATAIN
+d[5] => q[5]~reg0.DATAIN
+d[6] => q[6]~reg0.DATAIN
+d[7] => q[7]~reg0.DATAIN
+q[0] <= q[0]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[1] <= q[1]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[2] <= q[2]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[3] <= q[3]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[4] <= q[4]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[5] <= q[5]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[6] <= q[6]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[7] <= q[7]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|checa_potencia:quantosZero
+entB[0] => process_0.IN1
+entB[1] => process_0.IN1
+entB[2] => process_0.IN1
+entB[3] => process_0.IN1
+entB[4] => process_0.IN1
+entB[5] => process_0.IN1
+entB[6] => process_0.IN0
+entB[7] => process_0.IN1
+entB[7] => process_0.DATAB
+zeros[0] <= posicao[0].DB_MAX_OUTPUT_PORT_TYPE
+zeros[1] <= posicao[1].DB_MAX_OUTPUT_PORT_TYPE
+zeros[2] <= posicao[2].DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|mux2para1:muxMult
+a[0] => y.DATAB
+a[1] => y.DATAB
+a[2] => y.DATAB
+a[3] => y.DATAB
+a[4] => y.DATAB
+a[5] => y.DATAB
+a[6] => y.DATAB
+a[7] => y.DATAB
+b[0] => y.DATAA
+b[1] => y.DATAA
+b[2] => y.DATAA
+b[3] => y.DATAA
+b[4] => y.DATAA
+b[5] => y.DATAA
+b[6] => y.DATAA
+b[7] => y.DATAA
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+y[0] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[1] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[2] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[3] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[4] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[5] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[6] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[7] <= y.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|registrador:regMult
+clk => q[0]~reg0.CLK
+clk => q[1]~reg0.CLK
+clk => q[2]~reg0.CLK
+clk => q[3]~reg0.CLK
+clk => q[4]~reg0.CLK
+clk => q[5]~reg0.CLK
+clk => q[6]~reg0.CLK
+clk => q[7]~reg0.CLK
+carga => q[0]~reg0.ENA
+carga => q[1]~reg0.ENA
+carga => q[2]~reg0.ENA
+carga => q[3]~reg0.ENA
+carga => q[4]~reg0.ENA
+carga => q[5]~reg0.ENA
+carga => q[6]~reg0.ENA
+carga => q[7]~reg0.ENA
+d[0] => q[0]~reg0.DATAIN
+d[1] => q[1]~reg0.DATAIN
+d[2] => q[2]~reg0.DATAIN
+d[3] => q[3]~reg0.DATAIN
+d[4] => q[4]~reg0.DATAIN
+d[5] => q[5]~reg0.DATAIN
+d[6] => q[6]~reg0.DATAIN
+d[7] => q[7]~reg0.DATAIN
+q[0] <= q[0]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[1] <= q[1]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[2] <= q[2]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[3] <= q[3]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[4] <= q[4]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[5] <= q[5]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[6] <= q[6]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+q[7] <= q[7]~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|mux2para1:muxsoma1
+a[0] => y.DATAB
+a[1] => y.DATAB
+a[2] => y.DATAB
+a[3] => y.DATAB
+a[4] => y.DATAB
+a[5] => y.DATAB
+a[6] => y.DATAB
+a[7] => y.DATAB
+b[0] => y.DATAA
+b[1] => y.DATAA
+b[2] => y.DATAA
+b[3] => y.DATAA
+b[4] => y.DATAA
+b[5] => y.DATAA
+b[6] => y.DATAA
+b[7] => y.DATAA
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+y[0] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[1] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[2] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[3] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[4] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[5] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[6] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[7] <= y.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|mux2para1:muxsoma2
+a[0] => y.DATAB
+a[1] => y.DATAB
+a[2] => y.DATAB
+a[3] => y.DATAB
+a[4] => y.DATAB
+a[5] => y.DATAB
+a[6] => y.DATAB
+a[7] => y.DATAB
+b[0] => y.DATAA
+b[1] => y.DATAA
+b[2] => y.DATAA
+b[3] => y.DATAA
+b[4] => y.DATAA
+b[5] => y.DATAA
+b[6] => y.DATAA
+b[7] => y.DATAA
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+sel => y.OUTPUTSELECT
+y[0] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[1] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[2] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[3] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[4] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[5] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[6] <= y.DB_MAX_OUTPUT_PORT_TYPE
+y[7] <= y.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|somadorsubtrator:somasub
+A[0] => Add0.IN16
+A[0] => somador:SUM.A[0]
+A[1] => Add0.IN15
+A[1] => somador:SUM.A[1]
+A[2] => Add0.IN14
+A[2] => somador:SUM.A[2]
+A[3] => Add0.IN13
+A[3] => somador:SUM.A[3]
+A[4] => Add0.IN12
+A[4] => somador:SUM.A[4]
+A[5] => Add0.IN11
+A[5] => somador:SUM.A[5]
+A[6] => Add0.IN10
+A[6] => somador:SUM.A[6]
+A[7] => Add0.IN9
+A[7] => somador:SUM.A[7]
+B[0] => somador:SUM.B[0]
+B[0] => Add0.IN8
+B[1] => somador:SUM.B[1]
+B[1] => Add0.IN7
+B[2] => somador:SUM.B[2]
+B[2] => Add0.IN6
+B[3] => somador:SUM.B[3]
+B[3] => Add0.IN5
+B[4] => somador:SUM.B[4]
+B[4] => Add0.IN4
+B[5] => somador:SUM.B[5]
+B[5] => Add0.IN3
+B[6] => somador:SUM.B[6]
+B[6] => Add0.IN2
+B[7] => somador:SUM.B[7]
+B[7] => Add0.IN1
+op => S.OUTPUTSELECT
+op => S.OUTPUTSELECT
+op => S.OUTPUTSELECT
+op => S.OUTPUTSELECT
+op => S.OUTPUTSELECT
+op => S.OUTPUTSELECT
+op => S.OUTPUTSELECT
+op => S.OUTPUTSELECT
+S[0] <= S.DB_MAX_OUTPUT_PORT_TYPE
+S[1] <= S.DB_MAX_OUTPUT_PORT_TYPE
+S[2] <= S.DB_MAX_OUTPUT_PORT_TYPE
+S[3] <= S.DB_MAX_OUTPUT_PORT_TYPE
+S[4] <= S.DB_MAX_OUTPUT_PORT_TYPE
+S[5] <= S.DB_MAX_OUTPUT_PORT_TYPE
+S[6] <= S.DB_MAX_OUTPUT_PORT_TYPE
+S[7] <= S.DB_MAX_OUTPUT_PORT_TYPE
+o <= somador:SUM.cout
+
+
+|bo|somadorsubtrator:somasub|somador:SUM
+A[0] => fulladder:FA:0:FAi.a
+A[1] => fulladder:FA:1:FAi.a
+A[2] => fulladder:FA:2:FAi.a
+A[3] => fulladder:FA:3:FAi.a
+A[4] => fulladder:FA:4:FAi.a
+A[5] => fulladder:FA:5:FAi.a
+A[6] => fulladder:FA:6:FAi.a
+A[7] => fulladder:FA:7:FAi.a
+B[0] => fulladder:FA:0:FAi.b
+B[1] => fulladder:FA:1:FAi.b
+B[2] => fulladder:FA:2:FAi.b
+B[3] => fulladder:FA:3:FAi.b
+B[4] => fulladder:FA:4:FAi.b
+B[5] => fulladder:FA:5:FAi.b
+B[6] => fulladder:FA:6:FAi.b
+B[7] => fulladder:FA:7:FAi.b
+cin => fulladder:FA:0:FAi.cin
+S[0] <= fulladder:FA:0:FAi.s
+S[1] <= fulladder:FA:1:FAi.s
+S[2] <= fulladder:FA:2:FAi.s
+S[3] <= fulladder:FA:3:FAi.s
+S[4] <= fulladder:FA:4:FAi.s
+S[5] <= fulladder:FA:5:FAi.s
+S[6] <= fulladder:FA:6:FAi.s
+S[7] <= fulladder:FA:7:FAi.s
+cout <= fulladder:FA:7:FAi.cout
+
+
+|bo|somadorsubtrator:somasub|somador:SUM|fulladder:\FA:0:FAi
+a => s.IN0
+a => cout.IN0
+a => cout.IN0
+b => s.IN1
+b => cout.IN0
+b => cout.IN1
+cin => s.IN1
+cin => cout.IN1
+cin => cout.IN1
+s <= s.DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|somadorsubtrator:somasub|somador:SUM|fulladder:\FA:1:FAi
+a => s.IN0
+a => cout.IN0
+a => cout.IN0
+b => s.IN1
+b => cout.IN0
+b => cout.IN1
+cin => s.IN1
+cin => cout.IN1
+cin => cout.IN1
+s <= s.DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|somadorsubtrator:somasub|somador:SUM|fulladder:\FA:2:FAi
+a => s.IN0
+a => cout.IN0
+a => cout.IN0
+b => s.IN1
+b => cout.IN0
+b => cout.IN1
+cin => s.IN1
+cin => cout.IN1
+cin => cout.IN1
+s <= s.DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|somadorsubtrator:somasub|somador:SUM|fulladder:\FA:3:FAi
+a => s.IN0
+a => cout.IN0
+a => cout.IN0
+b => s.IN1
+b => cout.IN0
+b => cout.IN1
+cin => s.IN1
+cin => cout.IN1
+cin => cout.IN1
+s <= s.DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|somadorsubtrator:somasub|somador:SUM|fulladder:\FA:4:FAi
+a => s.IN0
+a => cout.IN0
+a => cout.IN0
+b => s.IN1
+b => cout.IN0
+b => cout.IN1
+cin => s.IN1
+cin => cout.IN1
+cin => cout.IN1
+s <= s.DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|somadorsubtrator:somasub|somador:SUM|fulladder:\FA:5:FAi
+a => s.IN0
+a => cout.IN0
+a => cout.IN0
+b => s.IN1
+b => cout.IN0
+b => cout.IN1
+cin => s.IN1
+cin => cout.IN1
+cin => cout.IN1
+s <= s.DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|somadorsubtrator:somasub|somador:SUM|fulladder:\FA:6:FAi
+a => s.IN0
+a => cout.IN0
+a => cout.IN0
+b => s.IN1
+b => cout.IN0
+b => cout.IN1
+cin => s.IN1
+cin => cout.IN1
+cin => cout.IN1
+s <= s.DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|somadorsubtrator:somasub|somador:SUM|fulladder:\FA:7:FAi
+a => s.IN0
+a => cout.IN0
+a => cout.IN0
+b => s.IN1
+b => cout.IN0
+b => cout.IN1
+cin => s.IN1
+cin => cout.IN1
+cin => cout.IN1
+s <= s.DB_MAX_OUTPUT_PORT_TYPE
+cout <= cout.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|igualazero:geraAz
+a[0] => Equal0.IN15
+a[1] => Equal0.IN14
+a[2] => Equal0.IN13
+a[3] => Equal0.IN12
+a[4] => Equal0.IN11
+a[5] => Equal0.IN10
+a[6] => Equal0.IN9
+a[7] => Equal0.IN8
+igual <= Equal0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|bo|igualazero:geraBz
+a[0] => Equal0.IN15
+a[1] => Equal0.IN14
+a[2] => Equal0.IN13
+a[3] => Equal0.IN12
+a[4] => Equal0.IN11
+a[5] => Equal0.IN10
+a[6] => Equal0.IN9
+a[7] => Equal0.IN8
+igual <= Equal0.DB_MAX_OUTPUT_PORT_TYPE
+
+
