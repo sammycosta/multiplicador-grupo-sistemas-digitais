@@ -11,6 +11,7 @@ entity bo is
             cEnt, mB, op, cmult, mmult : in std_logic;
             entA, entB : in std_logic_vector(N - 1 downto 0);
             Az, Bz, ovf: out std_logic;
+            abComparacao: out std_logic_vector(1 downto 0);
             mult : out std_logic_vector(2*N - 1 downto 0));
 end bo;
 architecture estrutura of bo is
@@ -22,6 +23,13 @@ architecture estrutura of bo is
                   d : in std_logic_vector(N - 1 downto 0);
                   q : out std_logic_vector(N - 1 downto 0));
       end component;
+
+      component comparador is
+            generic (N : integer);
+            port(
+                  valorA, valorB : in std_logic_vector(N-1 downto 0);
+                  flagComparacao : out std_logic_vector(1 downto 0));
+      end comparador;
 
       component mux2para1 is
             generic (N : integer);
@@ -58,6 +66,8 @@ architecture estrutura of bo is
       signal sairegMult, saimuxB, sairegA, sairegB, saisomasub, saimuxMult, saimuxsoma1, saimuxsoma2: std_logic_vector (2*N - 1 downto 0);
       signal quant_zero : integer range 0 to 2*N - 1;
       signal zero_um: std_logic_vector(2*N - 2 downto 0):= (others => '0');
+      signal AmaiorSignal, ABigualSignal;
+
 begin
       -- componentes e conexÃµes entre eles (port map) usar generic
       -- resolver esse problema, testar, depois resolver o caso em que nÃ£o tem zeros pra adicionar.
@@ -160,6 +170,16 @@ begin
             a => sairegB,
             igual => Bz
       ); 
-		
+
+      comparadorBits: comparador generic map(N => 2 *N)
+      port map
+      (
+            valorA => sairegA,
+            valorB => sairegB,
+            flagComparacao => abComparacao
+      )
+
+
 	mult <= sairegMult;
+
 end estrutura;
