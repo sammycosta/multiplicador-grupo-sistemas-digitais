@@ -3,7 +3,8 @@ use ieee.std_logic_1164.all;
 
 entity bc is
     port (Reset, clk, inicio : in std_logic;
-        A_zero, B_zero, ovf : in std_logic;
+        A_zero, B_zero, ovf: in std_logic;
+        abComparacao: in std_logic_vector(1 downto 0);
         pronto, erro : out std_logic;
         -- mP, cP, cA, cmult: out std_logic;
         clk_Entradas, clk_mult, op, mux_B, mux_mult: out std_logic);
@@ -32,7 +33,8 @@ begin
               end if;
           
           -- estado de setup
-          when S1 => state <= S2;
+          when S1 => 
+              state <= S2;
           
           -- S2 e S3 garantem que B receba o menor valor, evitando bordas de relogio adicionais
           -- checa os valores (um maior q o outro)
@@ -44,7 +46,8 @@ begin
               end if;
           
           -- inverte os valores
-          when S3 => state <= S2;
+          when S3 => 
+              state <= S2;
 
           -- checa se B (valor de retirada das potencias) eh 0
           when S4 =>
@@ -56,17 +59,22 @@ begin
           
           -- adiciona potencia ao mult (checa overflow)
           when S5 =>
-              if (ovf = `1`) then
+              if (ovf = '1') then
                 state <= E;
               else
                 state <= S6;
           
           -- retira potencia previamente adicionada do B
-          when S6 => state <= S4;
+          when S6 => 
+              state <= S4;
+
+          -- chegou aqui, terminou de alguma forma. voltar ao início
+          when S7 =>
+              state => S0;
 
           -- aguarda o inicio e retorna erro
           when E =>
-              pronto <= `1`; erro <= `1`;
+              -- pronto <= `1`; erro <= `1`;
               if (inicio = '0') then
                 state <= S0;
               else
@@ -83,8 +91,8 @@ begin
       -- conteúdo das variáveis de controle (decidindo carga dos flip-flops, etc para o BO)         	
 
         when S0 =>
-          pronto <= `1`;        -- indica que esta pronto pra outra
-          erro <= `0`;          -- terima programa sem erro
+          pronto <= '1';        -- indica que esta pronto pra outra
+          erro <= '0';          -- terima programa sem erro
 
         when S1 =>
           mux_mult <= '1';      -- reseta multiplicação
@@ -107,19 +115,20 @@ begin
           clk_Entradas <= '0';  -- mantem os valores de A e B (checa B = 0)
         
         when S5 =>
-          op <= `0`;            -- operacao de soma (mult)
+          op <= '0';            -- operacao de soma (mult)
           clk_mult <= `1`;      -- atualiza valor da multiplicacao
+          mux_mult <= '0';      -- regmult recebe a soma
 
         when S6 =>
-          op <= `1`;            -- operacao de subtracao (B)
+          op <= '1';            -- operacao de subtracao (B)
           clk_Entradas <= '1';  -- atualiza os valores de A e B (diminui B)
 
         when S7 =>
-          -- nao entendi direito oq esse estado faz
+          pronto <= '1';
 
         when E =>
-          pronto <= `1`;        -- indica que esta pronto pra outra
-          erro <= `1`;          -- terima programa com erro
+          pronto <= '1';        -- indica que esta pronto pra outra
+          erro <= '1';          -- terima programa com erro
 
 		  end case;
     end process;

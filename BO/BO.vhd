@@ -5,7 +5,7 @@ use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;  
 
 entity bo is
-      generic (N : integer := 4);
+      generic (N : integer);
       port (
             clk : in std_logic;
             cEnt, mB, op, cmult, mmult : in std_logic;
