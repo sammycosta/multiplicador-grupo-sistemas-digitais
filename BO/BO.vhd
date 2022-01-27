@@ -29,7 +29,7 @@ architecture estrutura of bo is
             port(
                   valorA, valorB : in std_logic_vector(N-1 downto 0);
                   flagComparacao : out std_logic_vector(1 downto 0));
-      end comparador;
+      end component;
 
       component mux2para1 is
             generic (N : integer);
@@ -66,7 +66,7 @@ architecture estrutura of bo is
       signal sairegMult, saimuxB, sairegA, sairegB, saisomasub, saimuxMult, saimuxsoma1, saimuxsoma2: std_logic_vector (2*N - 1 downto 0);
       signal quant_zero : integer range 0 to 2*N - 1;
       signal zero_um: std_logic_vector(2*N - 2 downto 0):= (others => '0');
-      signal AmaiorSignal, ABigualSignal;
+      signal AmaiorSignal, ABigualSignal: std_logic;
 
 begin
       -- componentes e conexÃµes entre eles (port map) usar generic
@@ -177,7 +177,7 @@ begin
             valorA => sairegA,
             valorB => sairegB,
             flagComparacao => abComparacao
-      )
+      );
 
 
 	mult <= sairegMult;

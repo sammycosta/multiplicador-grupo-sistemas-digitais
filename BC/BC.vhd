@@ -39,11 +39,11 @@ begin
           -- S2 e S3 garantem que B receba o menor valor, evitando bordas de relogio adicionais
           -- checa os valores (um maior q o outro)
           when S2 =>
-              if (A_maior = `1`) then
-                state <= S3;
-              else
+--              if (A_maior = '1') then
+--                state <= S3;
+--              else
                 state <= S4;
-              end if;
+--              end if;
           
           -- inverte os valores
           when S3 => 
@@ -63,6 +63,7 @@ begin
                 state <= E;
               else
                 state <= S6;
+				  end if;
           
           -- retira potencia previamente adicionada do B
           when S6 => 
@@ -70,7 +71,7 @@ begin
 
           -- chegou aqui, terminou de alguma forma. voltar ao início
           when S7 =>
-              state => S0;
+              state <= S0;
 
           -- aguarda o inicio e retorna erro
           when E =>
@@ -98,7 +99,7 @@ begin
           mux_mult <= '1';      -- reseta multiplicação
           mux_B <= '1';         -- B recebe entB
           clk_Entradas <= '1';  -- atualiza os valores de A e B (entA e entB)
-          clk_mult <= `1`;      -- atualiza valor da multiplicacao (reseta valor)
+          clk_mult <= '1';      -- atualiza valor da multiplicacao (reseta valor)
 
           -- definindo valores iniciais arbitrarios:
           op <= '0';
@@ -116,7 +117,7 @@ begin
         
         when S5 =>
           op <= '0';            -- operacao de soma (mult)
-          clk_mult <= `1`;      -- atualiza valor da multiplicacao
+          clk_mult <= '1';      -- atualiza valor da multiplicacao
           mux_mult <= '0';      -- regmult recebe a soma
 
         when S6 =>
