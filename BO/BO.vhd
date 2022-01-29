@@ -39,13 +39,27 @@ architecture estrutura of bo is
                   y : out std_logic_vector(N - 1 downto 0));
       end component;
 
-      component somadorsubtrator is
-            generic (N : integer);
-            port (
-                  A, B : in std_logic_vector(N - 1 downto 0);
-                  op : in std_logic;
-                  S : out std_logic_vector(N - 1 downto 0);
-                  o : out std_logic); -- status do overflow
+      -- component somadorsubtrator is
+      --       generic (N : integer);
+      --       port (
+      --             A, B : in std_logic_vector(N - 1 downto 0);
+      --             op : in std_logic;
+      --             S : out std_logic_vector(N - 1 downto 0);
+      --             o : out std_logic); -- status do overflow
+      -- end component;
+
+      component somador is
+            generic(N: integer);
+            port(A, B: in std_logic_vector(N-1 downto 0);
+                  cin: in std_logic;
+                  S: out std_logic_vector(N-1 downto 0);
+                  cout: out std_logic);   -- overflow
+      end component;
+
+      component subtrator is
+            generic (N: integer);
+            port (A, B: in std_logic_vector(N-1 downto 0);
+                  S: out std_logic_vector(N-1 downto 0));
       end component;
 
       component igualazero is
@@ -63,10 +77,12 @@ architecture estrutura of bo is
       end component;
 
       signal ZERO : std_logic_vector(N - 1 downto 0) := (others => '0');
-      signal sairegMult, saimuxB, sairegA, sairegB, saisomasub, saimuxMult, saimuxsoma1, saimuxsoma2: std_logic_vector (2*N - 1 downto 0);
+      signal sairegMult, saimuxB, sairegA, sairegB, saisomasub, saimuxMult: std_logic_vector (2*N - 1 downto 0);
       signal quant_zero : integer range 0 to 2*N - 1;
       signal zero_um: std_logic_vector(2*N - 2 downto 0):= (others => '0');
       signal AmaiorSignal, ABigualSignal: std_logic;
+      signal saiSoma, saiSub: std_logic_vector(2*N -1 downto 0 );
+
 
 begin
       -- componentes e conexÃµes entre eles (port map) usar generic
@@ -88,7 +104,7 @@ begin
       muxB: mux2para1 generic map (N => 2*N)
       port map
       (
-            a => saisomasub,
+            a => saiSub,    -- sub de B - potencia
             b => ZERO&entB, -- transforma pro max bit 
             sel => mux_B,
             y => saimuxB
@@ -114,7 +130,7 @@ begin
       muxMult: mux2para1 generic map (N => 2*N)
       port map
       (
-            a => saisomasub,
+            a => saiSoma,     -- soma da mult
             b => ZERO&ZERO,
             sel => mux_mult,
             y => saimuxMult
@@ -129,32 +145,52 @@ begin
             q => sairegMult
       );
 
-      muxsoma1: mux2para1 generic map (N => 2*N)
+      -- muxsoma1: mux2para1 generic map (N => 2*N)
+      -- port map
+      -- (
+      --       a => sairegMult,
+      --       b => sairegB,
+      --       sel => op,
+      --       y => saimuxsoma1
+      -- );
+
+      -- muxsoma2: mux2para1 generic map (N => 2*N)
+      -- port map
+      -- (
+      --       a => std_logic_vector(shift_left(unsigned(sairegA), quant_zero)) ,    -- shift de n vezes, sendo n = quant_zero
+      --       b => std_logic_vector(shift_left(unsigned(zero_um &'1'), quant_zero)),   -- potÃŠncia a ser retirada de b
+      --       sel => op,
+      --       y => saimuxsoma2
+      -- );
+
+      -- somasub: somadorsubtrator generic map (N => 2*N)
+      -- port map
+      -- (
+      --      A => saimuxsoma1,
+      --      B => saimuxsoma2,
+      --      op => op,
+      --      S => saisomasub,
+      --      - o => ovf
+      -- );
+
+
+
+      soma: somador generic map (N => 2*N)
       port map
       (
-            a => sairegMult,
-            b => sairegB,
-            sel => op,
-            y => saimuxsoma1
+            A => sairegMult,
+            B => std_logic_vector(shift_left(unsigned(sairegA), quant_zero)),
+            cin => '0',
+            S => saiSoma,
+            cout => ovf
       );
 
-      muxsoma2: mux2para1 generic map (N => 2*N)
+      sub: subtrator generic map(N => 2*N)
       port map
       (
-            a => std_logic_vector(shift_left(unsigned(sairegA), quant_zero)) ,    -- shift de n vezes, sendo n = quant_zero
-            b => std_logic_vector(shift_left(unsigned(zero_um &'1'), quant_zero)),   -- potÃŠncia a ser retirada de b
-            sel => op,
-            y => saimuxsoma2
-      );
-
-      somasub: somadorsubtrator generic map (N => 2*N)
-      port map
-      (
-            A => saimuxsoma1,
-            B => saimuxsoma2,
-            op => op,
-            S => saisomasub,
-            o => ovf
+            A => sairegB,
+            B => td_logic_vector(shift_left(unsigned(zero_um &'1'), quant_zero)),
+            S => saiSub
       );
 
 	geraAz: igualazero generic map(N  => 2*N) 

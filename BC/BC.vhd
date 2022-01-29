@@ -73,13 +73,13 @@ begin
               state <= S0;
 
           -- aguarda o inicio e retorna erro
-          when E =>
-              -- pronto <= `1`; erro <= `1`;
-              if (inicio = '0') then
-                state <= S0;
-              else
-                state <= S1;
-              end if;
+          -- when E =>
+          --     -- pronto <= `1`; erro <= `1`;
+          --     if (inicio = '0') then
+          --       state <= S0;
+          --     else
+          --       state <= S1;
+          --     end if;
         end case;
       end if;
     end process;
@@ -142,9 +142,9 @@ begin
           pronto <= '0';
 			    carga_mult <= '0';
 
-        when E =>
-          pronto <= '1';        -- indica que esta pronto pra outra
-          erro <= '1';          -- terima programa com erro
+        -- when E =>
+        --   pronto <= '1';        -- indica que esta pronto pra outra
+        --   erro <= '1';          -- terima programa com erro
 
 		  end case;
     end process;
