@@ -8,11 +8,11 @@ entity bo is
       generic (N : integer);
       port (
             clk : in std_logic;
-            cEnt, mB, op, cmult, mmult : in std_logic;
+            carga_Entradas, mux_B, op, carga_mult, mux_mult : in std_logic;
             entA, entB : in std_logic_vector(N - 1 downto 0);
             Az, Bz, ovf: out std_logic;
             abComparacao: out std_logic_vector(1 downto 0);
-            mult : out std_logic_vector(2*N - 1 downto 0));
+            mult : out std_logic_vector(2*N - 1 downto 0));  -- TESTES
 end bo;
 architecture estrutura of bo is
 
@@ -80,7 +80,7 @@ begin
       port map
       (
             clk => clk,
-            carga => cEnt,
+            carga => carga_Entradas,
             d => ZERO&entA, -- transforma pro max bit 
             q => sairegA
       );
@@ -90,7 +90,7 @@ begin
       (
             a => saisomasub,
             b => ZERO&entB, -- transforma pro max bit 
-            sel => mB,
+            sel => mux_B,
             y => saimuxB
       );
 
@@ -98,7 +98,7 @@ begin
       port map
       (
             clk => clk,
-            carga => cEnt,
+            carga => carga_Entradas,
             d => saimuxB,
             q => sairegB
       );
@@ -116,7 +116,7 @@ begin
       (
             a => saisomasub,
             b => ZERO&ZERO,
-            sel => cmult,
+            sel => mux_mult,
             y => saimuxMult
       );
 
@@ -124,7 +124,7 @@ begin
       port map
       (
             clk => clk,
-            carga => cmult,
+            carga => carga_mult,
             d => saimuxMult,
             q => sairegMult
       );
@@ -181,5 +181,4 @@ begin
 
 
 	mult <= sairegMult;
-
 end estrutura;

@@ -6,8 +6,7 @@ entity bc is
         A_zero, B_zero, ovf: in std_logic;
         abComparacao: in std_logic_vector(1 downto 0);
         pronto, erro : out std_logic;
-        -- mP, cP, cA, cmult: out std_logic;
-        clk_Entradas, clk_mult, op, mux_B, mux_mult: out std_logic);
+        carga_Entradas, carga_mult, op, mux_B, mux_mult: out std_logic);
 end bc;
 -- mudança no port: variáveis de controle (que saem)
 
@@ -98,34 +97,50 @@ begin
         when S1 =>
           mux_mult <= '1';      -- reseta multiplicação
           mux_B <= '1';         -- B recebe entB
-          clk_Entradas <= '1';  -- atualiza os valores de A e B (entA e entB)
-          clk_mult <= '1';      -- atualiza valor da multiplicacao (reseta valor)
-
+          carga_Entradas <= '1';  -- atualiza os valores de A e B (entA e entB)
+          carga_mult <= '1';      -- atualiza valor da multiplicacao (reseta valor)
+          pronto <= '0';
           -- definindo valores iniciais arbitrarios:
           op <= '0';
+			 
 
         when S2 =>
           mux_B <= '0';         -- B passa a receber valor da subtração
-          clk_Entradas <= '0';  -- mantem os valores de A e B (checa A = 0)
+          carga_Entradas <= '0';  -- mantem os valores de A e B (checa A = 0)
+          carga_mult <= '0';
+			    mux_mult <= '0';      -- regmult recebe a soma
+          pronto <= '0';
 
         when S3 =>
           -- inverter
-          clk_Entradas <= '1';  -- atualiza os valores de A e B  
+          carga_Entradas <= '1';  -- atualiza os valores de A e B 
+          carga_mult <= '0';
+			    mux_mult <= '0';      -- regmult recebe a soma
+          pronto <= '0';
 
         when S4 =>
-          clk_Entradas <= '0';  -- mantem os valores de A e B (checa B = 0)
+          carga_Entradas <= '0';  -- mantem os valores de A e B (checa B = 0)
+          carga_mult <= '0';
+			    mux_mult <= '0';      -- regmult recebe a soma
+          pronto <= '0';
         
         when S5 =>
           op <= '0';            -- operacao de soma (mult)
-          clk_mult <= '1';      -- atualiza valor da multiplicacao
+          carga_mult <= '1';      -- atualiza valor da multiplicacao
           mux_mult <= '0';      -- regmult recebe a soma
+          pronto <= '0';
 
         when S6 =>
           op <= '1';            -- operacao de subtracao (B)
-          clk_Entradas <= '1';  -- atualiza os valores de A e B (diminui B)
+          carga_Entradas <= '1';  -- atualiza os valores de A e B (diminui B)
+          mux_B <= '0'; -- B passa a receber valor da subtração
+			    carga_mult <= '0';
+			    mux_mult <= '0';      -- regmult recebe a soma
+          pronto <= '0';
 
         when S7 =>
-          pronto <= '1';
+          pronto <= '0';
+			    carga_mult <= '0';
 
         when E =>
           pronto <= '1';        -- indica que esta pronto pra outra

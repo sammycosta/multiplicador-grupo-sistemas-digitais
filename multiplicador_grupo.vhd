@@ -6,7 +6,7 @@ entity multiplicador_grupo is
     port (clk, Reset, inicio: in std_logic;
         entA, entB : in std_logic_vector(N-1 downto 0);
         saida: out std_logic_vector(2*N-1 downto 0);
-        pronto, erro: out std_logic);
+        pronto, erro: out std_logic); ---testes
 end multiplicador_grupo;
 
 architecture arc of multiplicador_grupo is
@@ -17,15 +17,15 @@ architecture arc of multiplicador_grupo is
       A_zero, B_zero, ovf: in std_logic;
       abComparacao: in std_logic_vector(1 downto 0);
       pronto, erro : out std_logic;
-      -- mP, cP, cA, cmult: out std_logic;
-      clk_Entradas, clk_mult, op, mux_B, mux_mult: out std_logic);
+      -- mP, cP, cA, carga_mult: out std_logic;
+      carga_Entradas, carga_mult, op, mux_B, mux_mult: out std_logic);
     end component;
 
     component bo is
       generic (N : integer);
       port (
             clk : in std_logic;
-            cEnt, mB, op, cmult, mmult : in std_logic;
+            carga_Entradas, mux_B, op, carga_mult, mux_mult : in std_logic;
             entA, entB : in std_logic_vector(N - 1 downto 0);
             Az, Bz, ovf: out std_logic;
             abComparacao: out std_logic_vector(1 downto 0);
@@ -33,7 +33,7 @@ architecture arc of multiplicador_grupo is
     end component;
 
     -- sinais de saida bc
-    signal clk_Entradas, clk_mult, op, mux_B, mux_mult: std_logic;
+    signal carga_Entradas, carga_mult, op, mux_B, mux_mult: std_logic;
 
     -- sinais de saida do bo
     signal Az, Bz, ovf: std_logic;
@@ -53,8 +53,8 @@ begin
       abComparacao => abComparacao,
       pronto => pronto,
       erro => erro,
-      clk_Entradas => clk_Entradas,
-      clk_mult => clk_mult,
+      carga_Entradas => carga_Entradas,
+      carga_mult => carga_mult,
       op => op, 
       mux_B => mux_B, 
       mux_mult => mux_mult
@@ -63,11 +63,11 @@ begin
   -- bloco operativo
     OPERATIVO : bo generic map (N => N) port map (
             clk => clk,
-            cEnt => clk_Entradas, 
-            mB => mux_B, 
+            carga_Entradas => carga_Entradas, 
+            mux_B => mux_B, 
             op => op, 
-            cmult => clk_mult, 
-            mmult => mux_mult,
+            carga_mult => carga_mult, 
+            mux_mult => mux_mult,
             entA => entA,
             entB => entB,
             Az => Az,
@@ -76,4 +76,5 @@ begin
             abComparacao => abComparacao,
             mult => saida
     );
+	 
 end arc;
