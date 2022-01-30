@@ -7,7 +7,7 @@ entity bo is
       generic (N : integer);
       port (
             clk : in std_logic;
-            carga_Entradas, mux_B, op, carga_mult, mux_mult : in std_logic;
+            carga_Entradas, mux_B, carga_mult, mux_mult : in std_logic;
             entA, entB : in std_logic_vector(N - 1 downto 0);
             Az, Bz: out std_logic;
             abComparacao: out std_logic_vector(1 downto 0);

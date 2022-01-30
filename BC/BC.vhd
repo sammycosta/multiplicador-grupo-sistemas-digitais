@@ -6,11 +6,11 @@ entity bc is
         A_zero, B_zero: in std_logic;
         abComparacao: in std_logic_vector(1 downto 0);
         pronto: out std_logic;
-        carga_Entradas, carga_mult, op, mux_B, mux_mult: out std_logic);
+        carga_Entradas, carga_mult, mux_B, mux_mult: out std_logic);
 end bc;
 
 architecture estrutura of bc is
-	type state_type is (S0, S1, S2, S3, S4, S5, S6, S7);
+	type state_type is (S0, S1, S2, S3, S4, S5, S6);
 	signal state: state_type;
 begin
     -- máquina de estados
@@ -49,21 +49,17 @@ begin
           -- checa se B (valor de retirada das potencias) eh 0
           when S4 =>
               if (B_zero = '1') then
-                state <= S7;
+                state <= S6;
               else
                 state <= S5;
               end if;
           
-          -- adiciona potencia ao mult (checa overflow)
+          -- adiciona potencia ao mult
           when S5 =>
-                state <= S6;
-          
-          -- retira potencia previamente adicionada do B
-          when S6 => 
-              state <= S4;
-
+                state <= S4;
+					 
           -- chegou aqui, terminou de alguma forma. voltar ao início
-          when S7 =>
+          when S6 =>
               state <= S0;
 
         end case;
@@ -86,7 +82,6 @@ begin
           carga_mult <= '1';      -- atualiza valor da multiplicacao (reseta valor)
           pronto <= '0';
           -- definindo valores iniciais arbitrarios:
-          op <= '0';
 			 
 
         when S2 =>
@@ -110,20 +105,14 @@ begin
           pronto <= '0';
         
         when S5 =>
-          op <= '0';            -- operacao de soma (mult)
-          carga_mult <= '1';      -- atualiza valor da multiplicacao
-          mux_mult <= '0';      -- regmult recebe a soma
-          pronto <= '0';
+		   mux_mult <= '0';      -- regmult recebe a soma
+         carga_mult <= '1';      -- atualiza valor da multiplicacao
+			mux_B <= '0'; -- B passa a receber valor da subtração
+			carga_Entradas <= '1';  -- atualiza os valores de A e B (diminui B)
+			pronto <= '0';
+
 
         when S6 =>
-          op <= '1';            -- operacao de subtracao (B)
-          carga_Entradas <= '1';  -- atualiza os valores de A e B (diminui B)
-          mux_B <= '0'; -- B passa a receber valor da subtração
-			 carga_mult <= '0';
-			 mux_mult <= '0';      -- regmult recebe a soma
-          pronto <= '0';
-
-        when S7 =>
           pronto <= '0';
 			 carga_mult <= '0';
 
