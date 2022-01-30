@@ -3,18 +3,16 @@ use ieee.std_logic_1164.all;
 
 entity bc is
     port (Reset, clk, inicio : in std_logic;
-        A_zero, B_zero, ovf: in std_logic;
+        A_zero, B_zero: in std_logic;
         abComparacao: in std_logic_vector(1 downto 0);
-        pronto, erro : out std_logic;
+        pronto: out std_logic;
         carga_Entradas, carga_mult, op, mux_B, mux_mult: out std_logic);
 end bc;
--- mudança no port: variáveis de controle (que saem)
 
 architecture estrutura of bc is
-	type state_type is (S0, S1, S2, S3, S4, S5, S6, S7, E);
+	type state_type is (S0, S1, S2, S3, S4, S5, S6, S7);
 	signal state: state_type;
 begin
-    -- troca de estados
     -- máquina de estados
     process(Reset, clk)
     begin
@@ -58,11 +56,7 @@ begin
           
           -- adiciona potencia ao mult (checa overflow)
           when S5 =>
-              if (ovf = '1') then
-                state <= E;
-              else
                 state <= S6;
-				  end if;
           
           -- retira potencia previamente adicionada do B
           when S6 => 
@@ -72,14 +66,6 @@ begin
           when S7 =>
               state <= S0;
 
-          -- aguarda o inicio e retorna erro
-          -- when E =>
-          --     -- pronto <= `1`; erro <= `1`;
-          --     if (inicio = '0') then
-          --       state <= S0;
-          --     else
-          --       state <= S1;
-          --     end if;
         end case;
       end if;
     end process;
@@ -92,7 +78,6 @@ begin
 
         when S0 =>
           pronto <= '1';        -- indica que esta pronto pra outra
-          erro <= '0';          -- terima programa sem erro
 
         when S1 =>
           mux_mult <= '1';      -- reseta multiplicação
@@ -108,20 +93,20 @@ begin
           mux_B <= '0';         -- B passa a receber valor da subtração
           carga_Entradas <= '0';  -- mantem os valores de A e B (checa A = 0)
           carga_mult <= '0';
-			    mux_mult <= '0';      -- regmult recebe a soma
+			 mux_mult <= '0';      -- regmult recebe a soma
           pronto <= '0';
 
         when S3 =>
           -- inverter
           carga_Entradas <= '1';  -- atualiza os valores de A e B 
           carga_mult <= '0';
-			    mux_mult <= '0';      -- regmult recebe a soma
+			 mux_mult <= '0';      -- regmult recebe a soma
           pronto <= '0';
 
         when S4 =>
           carga_Entradas <= '0';  -- mantem os valores de A e B (checa B = 0)
           carga_mult <= '0';
-			    mux_mult <= '0';      -- regmult recebe a soma
+			 mux_mult <= '0';      -- regmult recebe a soma
           pronto <= '0';
         
         when S5 =>
@@ -134,17 +119,13 @@ begin
           op <= '1';            -- operacao de subtracao (B)
           carga_Entradas <= '1';  -- atualiza os valores de A e B (diminui B)
           mux_B <= '0'; -- B passa a receber valor da subtração
-			    carga_mult <= '0';
-			    mux_mult <= '0';      -- regmult recebe a soma
+			 carga_mult <= '0';
+			 mux_mult <= '0';      -- regmult recebe a soma
           pronto <= '0';
 
         when S7 =>
           pronto <= '0';
-			    carga_mult <= '0';
-
-        -- when E =>
-        --   pronto <= '1';        -- indica que esta pronto pra outra
-        --   erro <= '1';          -- terima programa com erro
+			 carga_mult <= '0';
 
 		  end case;
     end process;

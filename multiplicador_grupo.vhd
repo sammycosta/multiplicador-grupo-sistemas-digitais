@@ -6,7 +6,7 @@ entity multiplicador_grupo is
     port (clk, Reset, inicio: in std_logic;
         entA, entB : in std_logic_vector(N-1 downto 0);
         saida: out std_logic_vector(2*N-1 downto 0);
-        pronto, erro: out std_logic); ---testes
+        pronto: out std_logic);
 end multiplicador_grupo;
 
 architecture arc of multiplicador_grupo is
@@ -14,10 +14,9 @@ architecture arc of multiplicador_grupo is
 
     component bc is
       port (Reset, clk, inicio : in std_logic;
-      A_zero, B_zero, ovf: in std_logic;
+      A_zero, B_zero: in std_logic;
       abComparacao: in std_logic_vector(1 downto 0);
-      pronto, erro : out std_logic;
-      -- mP, cP, cA, carga_mult: out std_logic;
+      pronto: out std_logic;
       carga_Entradas, carga_mult, op, mux_B, mux_mult: out std_logic);
     end component;
 
@@ -27,7 +26,7 @@ architecture arc of multiplicador_grupo is
             clk : in std_logic;
             carga_Entradas, mux_B, op, carga_mult, mux_mult : in std_logic;
             entA, entB : in std_logic_vector(N - 1 downto 0);
-            Az, Bz, ovf: out std_logic;
+            Az, Bz: out std_logic;
             abComparacao: out std_logic_vector(1 downto 0);
             mult : out std_logic_vector(2*N - 1 downto 0));
     end component;
@@ -36,7 +35,7 @@ architecture arc of multiplicador_grupo is
     signal carga_Entradas, carga_mult, op, mux_B, mux_mult: std_logic;
 
     -- sinais de saida do bo
-    signal Az, Bz, ovf: std_logic;
+    signal Az, Bz: std_logic;
     signal abComparacao: std_logic_vector(1 downto 0);
 
 begin
@@ -49,10 +48,8 @@ begin
       inicio => inicio,
       A_zero => Az, 
       B_zero => Bz, 
-      ovf => ovf, 
       abComparacao => abComparacao,
       pronto => pronto,
-      erro => erro,
       carga_Entradas => carga_Entradas,
       carga_mult => carga_mult,
       op => op, 
@@ -72,7 +69,6 @@ begin
             entB => entB,
             Az => Az,
             Bz => Bz,
-            ovf => ovf,
             abComparacao => abComparacao,
             mult => saida
     );

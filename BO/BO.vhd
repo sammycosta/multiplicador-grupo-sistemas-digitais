@@ -1,7 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
---use ieee.std_logic_arith.all; 
 use ieee.numeric_std.all;  
 
 entity bo is
@@ -10,9 +9,9 @@ entity bo is
             clk : in std_logic;
             carga_Entradas, mux_B, op, carga_mult, mux_mult : in std_logic;
             entA, entB : in std_logic_vector(N - 1 downto 0);
-            Az, Bz, ovf: out std_logic;
+            Az, Bz: out std_logic;
             abComparacao: out std_logic_vector(1 downto 0);
-            mult : out std_logic_vector(2*N - 1 downto 0));  -- TESTES
+            mult : out std_logic_vector(2*N - 1 downto 0)); 
 end bo;
 architecture estrutura of bo is
 
@@ -38,15 +37,6 @@ architecture estrutura of bo is
                   sel : in std_logic;
                   y : out std_logic_vector(N - 1 downto 0));
       end component;
-
-      -- component somadorsubtrator is
-      --       generic (N : integer);
-      --       port (
-      --             A, B : in std_logic_vector(N - 1 downto 0);
-      --             op : in std_logic;
-      --             S : out std_logic_vector(N - 1 downto 0);
-      --             o : out std_logic); -- status do overflow
-      -- end component;
 
       component somador is
             generic(N: integer);
@@ -76,12 +66,11 @@ architecture estrutura of bo is
                   zeros : out integer range 0 to N - 1);
       end component;
 
-      signal ZERO : std_logic_vector(N - 1 downto 0) := (others => '0');
-      signal sairegMult, saimuxB, sairegA, sairegB, saisomasub, saimuxMult: std_logic_vector (2*N - 1 downto 0);
+      signal ZERO : std_logic_vector(N - 1 downto 0)  := (others => '0');
+      signal sairegMult, saimuxB, sairegA, sairegB, saimuxMult, saiSoma, saiSub: std_logic_vector (2*N - 1 downto 0);
       signal quant_zero : integer range 0 to 2*N - 1;
       signal zero_um: std_logic_vector(2*N - 2 downto 0):= (others => '0');
-      signal AmaiorSignal, ABigualSignal: std_logic;
-      signal saiSoma, saiSub: std_logic_vector(2*N -1 downto 0 );
+      signal AmaiorSignal, ABigualSignal, ovf: std_logic;
 
 
 begin
@@ -145,36 +134,6 @@ begin
             q => sairegMult
       );
 
-      -- muxsoma1: mux2para1 generic map (N => 2*N)
-      -- port map
-      -- (
-      --       a => sairegMult,
-      --       b => sairegB,
-      --       sel => op,
-      --       y => saimuxsoma1
-      -- );
-
-      -- muxsoma2: mux2para1 generic map (N => 2*N)
-      -- port map
-      -- (
-      --       a => std_logic_vector(shift_left(unsigned(sairegA), quant_zero)) ,    -- shift de n vezes, sendo n = quant_zero
-      --       b => std_logic_vector(shift_left(unsigned(zero_um &'1'), quant_zero)),   -- potÃŠncia a ser retirada de b
-      --       sel => op,
-      --       y => saimuxsoma2
-      -- );
-
-      -- somasub: somadorsubtrator generic map (N => 2*N)
-      -- port map
-      -- (
-      --      A => saimuxsoma1,
-      --      B => saimuxsoma2,
-      --      op => op,
-      --      S => saisomasub,
-      --      - o => ovf
-      -- );
-
-
-
       soma: somador generic map (N => 2*N)
       port map
       (
@@ -189,7 +148,7 @@ begin
       port map
       (
             A => sairegB,
-            B => td_logic_vector(shift_left(unsigned(zero_um &'1'), quant_zero)),
+            B => std_logic_vector(shift_left(unsigned(zero_um &'1'), quant_zero)),
             S => saiSub
       );
 
