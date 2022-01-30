@@ -10,7 +10,6 @@ entity bo is
             carga_Entradas, mux_B, carga_mult, mux_mult : in std_logic;
             entA, entB : in std_logic_vector(N - 1 downto 0);
             Az, Bz: out std_logic;
-            abComparacao: out std_logic_vector(1 downto 0);
             mult : out std_logic_vector(2*N - 1 downto 0)); 
 end bo;
 architecture estrutura of bo is
@@ -21,13 +20,6 @@ architecture estrutura of bo is
                   clk, carga : in std_logic;
                   d : in std_logic_vector(N - 1 downto 0);
                   q : out std_logic_vector(N - 1 downto 0));
-      end component;
-
-      component comparador is
-            generic (N : integer);
-            port(
-                  valorA, valorB : in std_logic_vector(N-1 downto 0);
-                  flagComparacao : out std_logic_vector(1 downto 0));
       end component;
 
       component mux2para1 is
@@ -70,16 +62,11 @@ architecture estrutura of bo is
       signal sairegMult, saimuxB, sairegA, sairegB, saimuxMult, saiSoma, saiSub: std_logic_vector (2*N - 1 downto 0);
       signal quant_zero : integer range 0 to 2*N - 1;
       signal zero_um: std_logic_vector(2*N - 2 downto 0):= (others => '0');
-      signal AmaiorSignal, ABigualSignal, ovf: std_logic;
+      signal ovf: std_logic;
 
 
 begin
-      -- componentes e conexÃµes entre eles (port map) usar generic
-      -- resolver esse problema, testar, depois resolver o caso em que nÃ£o tem zeros pra adicionar.
 
-      -- SHIFT:
-      --    direita:    010 -> 001
-      --    esquerda:   010 -> 100
 
       regA : registrador generic map(N => 2*N)
       port map
@@ -165,14 +152,6 @@ begin
             a => sairegB,
             igual => Bz
       ); 
-
-      comparadorBits: comparador generic map(N => 2 *N)
-      port map
-      (
-            valorA => sairegA,
-            valorB => sairegB,
-            flagComparacao => abComparacao
-      );
 
 
 	mult <= sairegMult;

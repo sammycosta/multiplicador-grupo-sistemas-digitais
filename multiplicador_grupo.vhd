@@ -15,7 +15,6 @@ architecture arc of multiplicador_grupo is
     component bc is
       port (Reset, clk, inicio : in std_logic;
       A_zero, B_zero: in std_logic;
-      abComparacao: in std_logic_vector(1 downto 0);
       pronto: out std_logic;
       carga_Entradas, carga_mult, mux_B, mux_mult: out std_logic);
     end component;
@@ -27,7 +26,6 @@ architecture arc of multiplicador_grupo is
             carga_Entradas, mux_B, carga_mult, mux_mult : in std_logic;
             entA, entB : in std_logic_vector(N - 1 downto 0);
             Az, Bz: out std_logic;
-            abComparacao: out std_logic_vector(1 downto 0);
             mult : out std_logic_vector(2*N - 1 downto 0));
     end component;
 
@@ -36,7 +34,6 @@ architecture arc of multiplicador_grupo is
 
     -- sinais de saida do bo
     signal Az, Bz: std_logic;
-    signal abComparacao: std_logic_vector(1 downto 0);
 
 begin
   -- port map (conexoes entre bloco de controle e bloco operativo)
@@ -48,7 +45,6 @@ begin
       inicio => inicio,
       A_zero => Az, 
       B_zero => Bz, 
-      abComparacao => abComparacao,
       pronto => pronto,
       carga_Entradas => carga_Entradas,
       carga_mult => carga_mult,
@@ -67,7 +63,6 @@ begin
             entB => entB,
             Az => Az,
             Bz => Bz,
-            abComparacao => abComparacao,
             mult => saida
     );
 	 

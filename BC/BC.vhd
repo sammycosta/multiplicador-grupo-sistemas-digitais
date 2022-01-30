@@ -4,7 +4,6 @@ use ieee.std_logic_1164.all;
 entity bc is
     port (Reset, clk, inicio : in std_logic;
         A_zero, B_zero: in std_logic;
-        abComparacao: in std_logic_vector(1 downto 0);
         pronto: out std_logic;
         carga_Entradas, carga_mult, mux_B, mux_mult: out std_logic);
 end bc;
