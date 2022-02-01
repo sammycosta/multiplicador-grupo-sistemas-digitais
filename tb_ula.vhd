@@ -28,7 +28,9 @@ begin
 	entradaB <= "1111", "0011" after 230 ns, "0001" after 50 ns, "0110" after 50 ns;
 
 
-	UUT: entity work.ula port map (
+	UUT: entity work.ula
+	generic map (N => N)
+	port map (
 		clk => clk,
 		reset => reset,
 		pronto => pronto,

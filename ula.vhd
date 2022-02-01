@@ -5,11 +5,11 @@ use ieee.std_logic_unsigned.all;
 
 
 entity ula is
-	generic(N: INTEGER);
-	port(clk, reset: in std_logic;
+	generic(N: INTEGER := 4);
+	port(clk, reset, inicio: in std_logic;
 		entradaA, entradaB: in std_logic_vector(N-1 downto 0);
 		op: in std_logic_vector(1 downto 0);
-		pronto,inicio: out std_logic;
+		pronto: out std_logic;
 		saida: out std_logic_vector(2*N-1 downto 0));
 end ula;
 
@@ -31,11 +31,11 @@ architecture arch of ula is
 		-- divisor quando 10
 
 	begin
-		saida <= entradaA + entradaB when op = "00" else
-				entradaA - entradaB when op = "01" else
-				multSaidaSig when op = "11" else
-				entradaA + entradaB when others;
-	
+		with op select
+			saida <= "00000000" when "00",
+						"00000000" when "01",
+						multSaidaSig when "11",
+						"00000000" when others;
 	
 	-- somador
 	
@@ -44,7 +44,7 @@ architecture arch of ula is
 	-- subtrator
 	
 	-- multiplicador
-		mult: multiplicador_grupo generic map(N => 2*N)
+		mult: multiplicador_grupo generic map(N => N)
 		port map (
 			clk => clk,
 			reset => reset,
@@ -52,7 +52,7 @@ architecture arch of ula is
 			pronto => pronto,
 			entA => entradaA,
 			entB => entradaB,
-			saida => divSaidaSig,
+			saida => multSaidaSig
 		);
 	
 end arch;
