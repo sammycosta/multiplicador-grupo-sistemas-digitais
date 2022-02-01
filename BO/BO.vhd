@@ -122,7 +122,7 @@ begin
       (
             A => sairegMult,
             B => std_logic_vector(shift_left(unsigned(sairegA), quant_zero)),
-            S => saiSoma,
+            S => saiSoma
       );
 
       sub: subtrator generic map(N => 2*N)
