@@ -70,13 +70,14 @@ begin
           mux_B <= '0';         -- B passa a receber valor da subtração
           carga_Entradas <= '0';  -- mantem os valores de A e B (checa A = 0)
           carga_mult <= '0';
-			 mux_mult <= '0';      -- regmult recebe a soma
+			    mux_mult <= '0';      -- regmult recebe a soma
           pronto <= '0';
 
         when S3 =>
           carga_Entradas <= '1';  -- mantem os valores de A e B (checa B = 0)
+          mux_B <= '0';
           carga_mult <= '1';
-			 mux_mult <= '0';      -- regmult recebe a soma
+			    mux_mult <= '0';      -- regmult recebe a soma
           pronto <= '0';
 
 		  end case;
