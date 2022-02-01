@@ -33,9 +33,7 @@ architecture estrutura of bo is
       component somador is
             generic(N: integer);
             port(A, B: in std_logic_vector(N-1 downto 0);
-                  cin: in std_logic;
-                  S: out std_logic_vector(N-1 downto 0);
-                  cout: out std_logic);   -- overflow
+                  S: out std_logic_vector(N-1 downto 0));
       end component;
 
       component subtrator is
@@ -62,8 +60,6 @@ architecture estrutura of bo is
       signal sairegMult, saimuxB, sairegA, sairegB, saimuxMult, saiSoma, saiSub: std_logic_vector (2*N - 1 downto 0);
       signal quant_zero : integer range 0 to 2*N - 1;
       signal zero_um: std_logic_vector(2*N - 2 downto 0):= (others => '0');
-      signal ovf: std_logic;
-
 
 begin
 
@@ -126,9 +122,7 @@ begin
       (
             A => sairegMult,
             B => std_logic_vector(shift_left(unsigned(sairegA), quant_zero)),
-            cin => '0',
             S => saiSoma,
-            cout => ovf
       );
 
       sub: subtrator generic map(N => 2*N)
