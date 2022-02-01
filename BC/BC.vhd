@@ -9,7 +9,7 @@ entity bc is
 end bc;
 
 architecture estrutura of bc is
-	type state_type is (S0, S1, S2, S3, S4, S5, S6);
+	type state_type is (S0, S1, S2, S3);
 	signal state: state_type;
 begin
     -- máquina de estados
@@ -31,35 +31,17 @@ begin
           -- estado de setup
           when S1 => 
               state <= S2;
-          
-          -- S2 e S3 garantem que B receba o menor valor, evitando bordas de relogio adicionais
-          -- checa os valores (um maior q o outro)
-          when S2 =>
---              if (A_maior = '1') then
---                state <= S3;
---              else
-                state <= S4;
---              end if;
-          
-          -- inverte os valores
-          when S3 => 
-              state <= S2;
 
-          -- checa se B (valor de retirada das potencias) eh 0
-          when S4 =>
-              if (B_zero = '1') then
-                state <= S6;
+
+          when S2 =>
+              if (B_zero = '1' or A_zero = '1') then
+                state <= S0;
               else
-                state <= S5;
+                state <= S3;
               end if;
           
-          -- adiciona potencia ao mult
-          when S5 =>
-                state <= S4;
-					 
-          -- chegou aqui, terminou de alguma forma. voltar ao início
-          when S6 =>
-              state <= S0;
+          when S3 =>
+                state <= S2;
 
         end case;
       end if;
@@ -72,7 +54,8 @@ begin
       -- conteúdo das variáveis de controle (decidindo carga dos flip-flops, etc para o BO)         	
 
         when S0 =>
-          pronto <= '1';        -- indica que esta pronto pra outra
+          pronto <= '1';
+			 carga_mult <= '0';
 
         when S1 =>
           mux_mult <= '1';      -- reseta multiplicação
@@ -91,29 +74,10 @@ begin
           pronto <= '0';
 
         when S3 =>
-          -- inverter
-          carga_Entradas <= '1';  -- atualiza os valores de A e B 
-          carga_mult <= '0';
+          carga_Entradas <= '1';  -- mantem os valores de A e B (checa B = 0)
+          carga_mult <= '1';
 			 mux_mult <= '0';      -- regmult recebe a soma
           pronto <= '0';
-
-        when S4 =>
-          carga_Entradas <= '0';  -- mantem os valores de A e B (checa B = 0)
-          carga_mult <= '0';
-			 mux_mult <= '0';      -- regmult recebe a soma
-          pronto <= '0';
-        
-        when S5 =>
-		   mux_mult <= '0';      -- regmult recebe a soma
-         carga_mult <= '1';      -- atualiza valor da multiplicacao
-			mux_B <= '0'; -- B passa a receber valor da subtração
-			carga_Entradas <= '1';  -- atualiza os valores de A e B (diminui B)
-			pronto <= '0';
-
-
-        when S6 =>
-          pronto <= '0';
-			 carga_mult <= '0';
 
 		  end case;
     end process;
