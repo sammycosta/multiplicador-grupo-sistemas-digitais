@@ -16,7 +16,7 @@ end ula;
 architecture arch of ula is
 	
 	component multiplicador_grupo is
-		generic (N : integer := 4);
+		generic (N : integer);
 		port (clk, Reset, inicio: in std_logic;
 			entA, entB : in std_logic_vector(N-1 downto 0);
 			saida: out std_logic_vector(2*N-1 downto 0);
